@@ -21,7 +21,13 @@ var a = Float32Array;
 var b = Float32Array;
 var storedNumber = Float32Array;
 var operation = Number;
+var operationLast = Number;
 var hasNumber = false;
+var didOperation = false;
+
+a=null;
+b=null;
+storedNumber=null;
 
 eraseButton.onclick = function () {
     removeNumber();
@@ -29,6 +35,13 @@ eraseButton.onclick = function () {
 
 restartButton.onclick = function () {
     screen.value = "0";
+    a = null;
+    b = null;
+    operation = null;
+    operationLast = null;
+    storedNumber = null;
+    hasNumber = false;
+    didOperation = false;
 }
 
 zeroButton.onclick = function () {
@@ -67,63 +80,98 @@ nineButton.onclick = function () {
 }
 
 plusButton.onclick = function () {
-    if (hasNumber == false) {
-        hasNumber = true;
-        a = parseFloat(screen.value);
-        operation = 0;
-        screen.value = "0";
+    if (operationLast != 0)
+    {
+        b = null;
     }
-    else if (hasNumber == true) {
-        if (screen.value != 0)
-        {
-            b = parseFloat(screen.value);
-            screen.value = doCalculation(a,b,operation);
-            reset();
-        }
-        
-    }
+    operationLast = 0;
+    operationButton(0);
 }
 
-minusButton.onclick = function ()
-{
-    if (hasNumber == false)
+minusButton.onclick = function () {
+    if (operationLast != 1)
     {
-        a.parseFloat(screenValues)
+        b = null;
     }
+    operationLast = 1;
+    operationButton(1);
+}
+
+multiplyButton.onclick = function()
+{
+    if (operationLast != 2)
+    {
+        b = 1;
+    }
+    operationLast = 2;
+    operationButton(2);
+}
+
+divideButton.onclick = function()
+{
+    if (operationLast != 3)
+    {
+        b = 1;
+    }
+    operationLast = 3;
+    operationButton(3);
 }
 
 equalsButton.onclick = function () {
-    if (hasNumber == true) {
-        if (operation != null) {
-           screen.value = doCalculation(a,b,operation);
-           reset();
+    operationButton(operationLast);
+}
 
-        }
+operationButton = function (operationNumber) {
+    operation = operationNumber;
+    if (!hasNumber && storedNumber == null && a == null && b == null) {
+        a = parseFloat(screen.value);
+        hasNumber = true;
+        screen.value = "0";
     }
+    else if (hasNumber && b == null && storedNumber == null)
+    {
+        b = parseFloat(screen.value);
+        storedNumber = doCalculation(a,b,operation);
+        screen.value=storedNumber;
+        hasNumber = false;
+        operation = null;
+    }
+    else if (storedNumber != null && parseFloat(screen.value) != storedNumber) {
+      b = parseFloat(screen.value);
+      storedNumber = doCalculation(storedNumber,b,operation);
+      screen.value=storedNumber;
+      operation=null;
+    }
+    else if (storedNumber != null && parseFloat(screen.value) == storedNumber) {
+        storedNumber = doCalculation(storedNumber,b,operation);
+      screen.value=storedNumber;
+      operation=null;
+        
+    }
+    didOperation = true;
 }
 
-function reset()
-{
-    a = parseFloat(screen.value);
-    b = 0;
-    operation = null;
-}
-
-function doCalculation(a, b, operation)
-{
+function doCalculation(a, b, operation) {
 
     switch (operation) {
         case 0:
-            return (a+b);
+            return (a + b);
             break;
         case 1:
-            return (a-b);
+            return (a - b);
             break;
         case 2:
-            return (a*b);
+            return (a * b);
             break;
         case 3:
-            return (a/b);
+            if (b!=0)
+            {
+                return (a / b);
+            }
+            else
+            {
+                screen.value="Error";
+            }
         default:
             console.log("Unknown operation")
             return;
@@ -133,6 +181,12 @@ function doCalculation(a, b, operation)
 
 function addNumber(n) {
     if (screen.value == "0") {
+        screen.value = "";
+    }
+
+    if (didOperation == true)
+    {
+        didOperation = false;
         screen.value = "";
     }
 
