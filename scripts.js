@@ -80,7 +80,7 @@ nineButton.onclick = function () {
 }
 
 plusButton.onclick = function () {
-    if (operationLast != 0)
+    if (operationLast != 0 && !hasNumber)
     {
         b = null;
     }
@@ -89,7 +89,7 @@ plusButton.onclick = function () {
 }
 
 minusButton.onclick = function () {
-    if (operationLast != 1)
+    if (operationLast != 1 && !hasNumber)
     {
         b = null;
     }
@@ -99,9 +99,9 @@ minusButton.onclick = function () {
 
 multiplyButton.onclick = function()
 {
-    if (operationLast != 2)
+    if (operationLast != 2 && !hasNumber)
     {
-        b = 1;
+        b = null;
     }
     operationLast = 2;
     operationButton(2);
@@ -109,9 +109,9 @@ multiplyButton.onclick = function()
 
 divideButton.onclick = function()
 {
-    if (operationLast != 3)
+    if (operationLast != 3 && !hasNumber)
     {
-        b = 1;
+        b = null;
     }
     operationLast = 3;
     operationButton(3);
